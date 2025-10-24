@@ -1,0 +1,51 @@
+{
+  "name": "photo-magic-ai-desktop",
+  "version": "1.0.0",
+  "description": "一个由Gemini驱动的照片魔法AI桌面应用",
+  "author": "AI Engineer",
+  "homepage": ".",
+  "main": "main.js",
+  "scripts": {
+    "build:js": "esbuild index.tsx --bundle --outfile=build/bundle.js --jsx=automatic --loader:.tsx=tsx",
+    "build:static": "shx mkdir -p build && shx cp -r index.html metadata.json build/",
+    "build": "shx rm -rf build && npm run build:static && npm run build:js",
+    "start": "npm run build && electron .",
+    "pack": "npm run build && electron-builder"
+  },
+  "dependencies": {
+    "@google/genai": "^1.25.0",
+    "dotenv": "^16.4.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "electron": "^28.3.3",
+    "electron-builder": "^24.13.3",
+    "esbuild": "^0.21.3",
+    "shx": "^0.3.4"
+  },
+  "build": {
+    "appId": "com.ai-engineer.photomagicai",
+    "productName": "照片魔法AI",
+    "files": [
+      "build/**/*",
+      "main.js",
+      "preload.js"
+    ],
+    "directories": {
+      "buildResources": "assets",
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  }
+}

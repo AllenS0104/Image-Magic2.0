@@ -1,0 +1,7 @@
+{
+  "name": "照片魔法AI",
+  "description": "一个由Gemini驱动的专业照片处理工具。上传一张图片，一键应用令人惊叹的、堪比Photoshop的效果。",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
