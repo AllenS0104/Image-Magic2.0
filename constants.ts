@@ -47,7 +47,7 @@ export const EFFECTS: Effect[] = [
     id: 'pop-art',
     name: '波普艺术',
     description: '安迪·沃霍尔风格',
-    prompt: "Transform this photo into a vibrant, colorful pop art style, similar to Andy Warhol's work. Use bold, contrasting colors and a screen-printed look.",
+    prompt: "Transform this photo into a vibrant, colorful pop art style, similar to Andy Warhol's work. Use bold, contrasting colors, and a screen-printed look.",
   },
   {
     id: 'watercolor',
@@ -71,13 +71,13 @@ export const EFFECTS: Effect[] = [
     id: 'cyberpunk',
     name: '赛博朋克',
     description: '霓虹灯下的未来都市',
-    prompt: 'Give this photo a futuristic, cyberpunk aesthetic. Add vibrant neon lights, especially in blues and pinks, a dark, moody atmosphere with deep shadows, and a cinematic feel.',
+    prompt: "Dramatically transform this photo into an intense, futuristic cyberpunk cityscape. Saturate the scene with vibrant, glowing neon lights, focusing on electric blues, hot pinks, and acid greens. Plunge the shadows into deep, inky blacks to create extreme contrast. Add elements like holographic advertisements, rainy, reflective streets, and a dense, moody atmosphere. The final image should feel like a still from a high-budget sci-fi blockbuster film.",
   },
   {
     id: 'eye-of-cosmos',
     name: '星辰之眼',
     description: '史诗级星空增强',
-    prompt: 'Transform this photo into an epic, high-resolution astrophotography masterpiece. Make the stars pinpoint sharp and brilliantly bright. Drastically enhance the vibrant colors and intricate details of any nebulae or galaxies. Push the background sky to a deep, inky black to create maximum contrast and a profound sense of depth, similar to an image from a deep space telescope.',
+    prompt: "Transform the sky in this photo into an epic and crystal-clear celestial masterpiece. Your primary goal is absolute sharpness and clarity. 1. **Stars**: Render all stars as tack-sharp, brilliantly clear points of light. There should be zero blur or smudging. The sky should be filled with a mix of fine, distant stars and a few brighter, more prominent ones that have a subtle, crisp glow. 2. **Milky Way**: The centerpiece should be a stunningly detailed Milky Way galaxy. Be creative with its composition: it could be a majestic vertical pillar of light, a grand horizontal arc stretching across the horizon, or a dynamic diagonal slash. The Milky Way must show intricate detail, with dark dust lanes contrasting against glowing nebulae and dense star fields. 3. **Details**: To enhance the realism and sense of wonder, you may subtly add a small, distant star cluster if it complements the scene. 4. **Overall Mood**: The final image should be awe-inspiring, with a deep, dark sky that makes the celestial objects pop with incredible vibrancy and clarity. It should look like a professional astrophotograph taken under perfect conditions.",
   },
   {
     id: 'star-trails',
@@ -90,6 +90,24 @@ export const EFFECTS: Effect[] = [
     name: '梦幻极光',
     description: '为夜空增添绚丽光彩',
     prompt: 'Add a beautiful, ethereal aurora borealis (northern lights) effect to the sky in this photo. The aurora should have flowing ribbons of green and magenta light, look natural within the scene, and reflect realistically on any water or landscape elements present.',
+  },
+  {
+    id: 'glitch',
+    name: '故障艺术',
+    description: '充满未来感的数字干扰',
+    prompt: 'Transform this photo with a glitch art effect. Introduce digital artifacts like RGB color splitting, pixel sorting, datamoshing, and scan lines. The effect should be stylish and intentional, creating a futuristic, deconstructed aesthetic without making the original subject completely unrecognizable.',
+  },
+  {
+    id: 'neon-sketch',
+    name: '霓虹素描',
+    description: '发光的定制霓虹招牌',
+    prompt: 'Convert the main subject of this photo into a glowing neon sketch. Trace the key outlines of the subject with bright, vibrant neon lines (e.g., pink, blue, cyan). Place the neon sketch against a dark, moody background like a brick wall or a dark cityscape to make the glow pop. The final image should look like a custom neon sign.',
+  },
+  {
+    id: 'light-painting',
+    name: '动态光绘',
+    description: '用光在空中作画',
+    prompt: 'Add a dynamic light painting effect to this image. Weave vibrant, flowing trails of light around the main subject or through the scene. The light trails should look like they were created with a long-exposure photograph, adding a sense of motion and energy. Use a variety of colors for the light trails to create a visually stunning and magical effect.',
   },
   {
     id: 'intelligent-merge',

@@ -6,19 +6,25 @@
   "homepage": ".",
   "main": "main.js",
   "scripts": {
-    "build:js": "esbuild index.tsx --bundle --outfile=build/bundle.js --jsx=automatic --loader:.tsx=tsx",
+    "build:web-bundle": "esbuild index.tsx --bundle --outfile=build/bundle.js --jsx=automatic --loader:.tsx=tsx",
     "build:static": "shx mkdir -p build && shx cp -r index.html metadata.json build/",
-    "build": "shx rm -rf build && npm run build:static && npm run build:js",
-    "start": "npm run build && electron .",
-    "pack": "npm run build && electron-builder"
+    "build": "shx rm -rf build && npm run build:static && npm run build:web-bundle",
+    "start:desktop": "npm run build && electron .",
+    "pack:desktop": "npm run build && electron-builder",
+    "android:add": "npm run build && npx cap add android",
+    "android:sync": "npm run build && npx cap sync android",
+    "android:open": "npx cap open android"
   },
   "dependencies": {
-    "@google/genai": "^1.25.0",
+    "@google/genai": "^1.26.0",
     "dotenv": "^16.4.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@capacitor/android": "^6.1.0",
+    "@capacitor/cli": "^6.1.0",
+    "@capacitor/core": "^6.1.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "electron": "^28.3.3",
