@@ -1,6 +1,6 @@
 import React from 'react';
-import { EFFECTS } from '../constants';
-import type { Effect } from '../types';
+import { SINGLE_IMAGE_EFFECT_CATEGORIES, MULTI_IMAGE_EFFECT_CATEGORIES } from '../constants';
+import type { Effect, EffectCategory } from '../types';
 
 interface EffectsPanelProps {
   onSelectEffect: (effect: Effect) => void;
@@ -45,11 +45,19 @@ export const EffectsPanel: React.FC<EffectsPanelProps> = ({
     onApplyCustomPrompt
 }) => {
   
-  let effectsToShow: Effect[] = [];
+  let categoriesToShow: EffectCategory[] = [];
   if (hasMultipleImages) {
-    effectsToShow = multiImageSuggestions.length > 0 ? multiImageSuggestions : EFFECTS.filter(e => e.multiImage);
+    if (multiImageSuggestions.length > 0) {
+        categoriesToShow = [{ name: 'AI 智能建议', effects: multiImageSuggestions }, ...MULTI_IMAGE_EFFECT_CATEGORIES];
+    } else {
+        categoriesToShow = MULTI_IMAGE_EFFECT_CATEGORIES;
+    }
   } else {
-    effectsToShow = randomEffects.length > 0 ? randomEffects : EFFECTS.filter(e => !e.multiImage);
+    if (randomEffects.length > 0) {
+        categoriesToShow = [{ name: 'AI 为您生成', effects: randomEffects }, ...SINGLE_IMAGE_EFFECT_CATEGORIES];
+    } else {
+        categoriesToShow = SINGLE_IMAGE_EFFECT_CATEGORIES;
+    }
   }
   
   const isPanelDisabled = !isReady || isLoading || isGeneratingEffects;
@@ -75,21 +83,28 @@ export const EffectsPanel: React.FC<EffectsPanelProps> = ({
           {isGeneratingEffects ? '正在生成...' : (hasMultipleImages ? 'AI智能建议' : 'AI生成新效果')}
         </button>
 
-      <div className={`grid grid-cols-2 md:grid-cols-3 gap-4 ${!isReady ? 'opacity-50 cursor-not-allowed' : ''}`}>
-        {effectsToShow.map((effect) => (
-          <button
-            key={effect.id}
-            onClick={() => onSelectEffect(effect)}
-            disabled={isPanelDisabled}
-            className={`
-              flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all duration-200 h-24
-              ${selectedEffectId === effect.id ? 'border-blue-500 bg-blue-500/20' : 'border-gray-700 bg-gray-700/50 hover:border-gray-500 hover:bg-gray-600'}
-              disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-gray-700 disabled:hover:bg-gray-700/50
-            `}
-          >
-            <span className="font-semibold text-white/90 text-center text-sm">{effect.name}</span>
-            <span className="text-xs text-white/60 text-center mt-1">{effect.description}</span>
-          </button>
+      <div className={`transition-opacity duration-300 ${!isReady ? 'opacity-50 cursor-not-allowed' : ''}`}>
+        {categoriesToShow.map((category) => (
+          <div key={category.name} className="mt-6 first:mt-0">
+            <h3 className="text-base font-semibold text-white/80 mb-3">{category.name}</h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {category.effects.map((effect) => (
+                <button
+                  key={effect.id}
+                  onClick={() => onSelectEffect(effect)}
+                  disabled={isPanelDisabled}
+                  className={`
+                    flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all duration-200 h-24
+                    ${selectedEffectId === effect.id ? 'border-blue-500 bg-blue-500/20' : 'border-gray-700 bg-gray-700/50 hover:border-gray-500 hover:bg-gray-600'}
+                    disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-gray-700 disabled:hover:bg-gray-700/50
+                  `}
+                >
+                  <span className="font-semibold text-white/90 text-center text-sm">{effect.name}</span>
+                  <span className="text-xs text-white/60 text-center mt-1">{effect.description}</span>
+                </button>
+              ))}
+            </div>
+          </div>
         ))}
       </div>
       

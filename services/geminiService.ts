@@ -74,18 +74,37 @@ export async function applyPhotoEffect(images: { data: string, mimeType: string 
       },
     }));
 
+    // “专业级摄影重制协议”：以佳能5D4等专业全画幅相机为基准，追求极致的摄影真实感和画质。
+    const masterInstructions = `
+--- PRO-GRADE PHOTOGRAPHIC REMASTERING PROTOCOL ---
+You are a world-class professional photographer and retoucher. Your task is to remaster the provided photograph to emulate the quality of a top-tier professional full-frame DSLR camera, such as a Canon 5D Mark IV, paired with a premium L-series lens. The final result must be of the highest photographic fidelity.
+
+These are your NON-NEGOTIABLE CORE DIRECTIVES:
+1.  **PREMIUM LENS & SENSOR EMULATION:** The final image must exhibit tack-sharp clarity and edge-to-edge sharpness, characteristic of a high-end prime lens. All details must be rendered with extreme precision.
+2.  **FULL-FRAME DYNAMIC RANGE:** You must produce an image with an incredibly wide dynamic range. Recover all possible details from the brightest highlights and the deepest shadows without any clipping (pure white or pure black areas).
+3.  **PROFESSIONAL COLOR SCIENCE:** The color reproduction must be rich, vibrant, yet utterly natural. Emulate professional camera color science, ensuring lifelike skin tones and accurate, pleasing hues throughout the image.
+4.  **ABSOLUTE ZERO NOISE/ARTIFACTS:** The final image must be pristine and completely free of digital noise, compression artifacts, or color banding, as if it were shot at the camera's base ISO (e.g., ISO 100).
+5.  **PRESERVE AUTHENTICITY:** This is a *photographic enhancement*, not a stylistic filter application. The goal is ultimate realism and fidelity. Do not add artificial grain, heavy vignettes, or dramatic color grading unless the user's effect prompt explicitly and specifically demands it.
+6.  **EDIT, DO NOT REPLACE:** You must perform a non-destructive remaster *on the original image's data*. Preserve the original composition, subjects, and lighting. Enhance, do not hallucinate a new image.
+7.  **TEXT INTEGRITY:** If the original photo contains any legible text, you MUST preserve it perfectly. It must remain 100% sharp and readable.
+
+Now, execute the following specific effect with the precision of a master photographer, adhering to all directives above:
+
+Effect to apply: "${prompt}"
+`;
+    const finalPrompt = masterInstructions;
+
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash-image',
-      contents: {
+      contents: [{ // 修复：将 contents 包装在数组中，以符合模型期望的格式
         parts: [
-          // 修复：对于图片编辑任务，最佳实践是先提供图片，再提供操作指令。
-          // 将图片数据放在指令文本前面可以解决 'NO_IMAGE' 错误。
+          // 对于图片编辑任务，最佳实践是先提供图片，再提供操作指令。
           ...imageParts,
           {
-            text: prompt,
+            text: finalPrompt,
           },
         ],
-      },
+      }],
       config: {
         responseModalities: [Modality.IMAGE],
       },
@@ -247,6 +266,51 @@ export async function generateMultiImageSuggestions(images: { data: string, mime
   } catch (error) {
     console.error("使用Gemini生成多图建议时出错:", error);
     let message = "AI生成智能建议失败。";
+    if (error instanceof Error && error.message) {
+      message = error.message;
+    }
+    throw new Error(message);
+  }
+}
+
+export async function identifyImageContent(image: { data: string, mimeType: string }): Promise<string> {
+  try {
+    if (!ai) { await initializeAiClient(); }
+    if (!ai) { throw new Error("AI 客户端未能初始化。"); }
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: {
+        parts: [
+          {
+            inlineData: {
+              data: image.data,
+              mimeType: image.mimeType,
+            }
+          },
+          {
+            text: `你是一位首席视觉分析师。你的核心任务是**首先识别出这张图片中最重要的核心主体**，然后仅针对该主体提供深入、专注的分析。请忽略不重要的背景元素和次要细节。
+
+1.  **识别核心主体**：清晰地指出图片的主角是什么。
+2.  **提供深入分析**：根据主体的类型，进行详细说明：
+    *   **动植物/昆虫**：识别其物종和通用名，并分享一两个最有趣的知识点。
+    *   **人物**：如果为公众人物，请识别其身份。否则，描述其姿态、情绪和衣着风格。
+    *   **文字（特别是古文/书法）**：尽可能准确地释读文字内容，并解释其可能的含义、出处或书法风格。
+    *   **地标/建筑**：识别其名称、地点，并简述其最著名的特点或历史。
+    *   **艺术品**：识别其作者、流派，并解读其主要表现手法或象征意义。
+    *   **物体（如汽车、食物等）**：识别其具体类型或名称，并描述其最显著的特征。
+
+你的回答必须聚焦、有条理，用中文写成，并使用 Markdown 格式以增强可读性。`,
+          },
+        ],
+      },
+    });
+
+    return response.text;
+
+  } catch (error) {
+    console.error("使用Gemini识别图片内容时出错:", error);
+    let message = "AI识别图片内容失败。";
     if (error instanceof Error && error.message) {
       message = error.message;
     }

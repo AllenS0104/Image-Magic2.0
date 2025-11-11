@@ -3,7 +3,8 @@ import { Header } from './components/Header';
 import { ImageUploader } from './components/ImageUploader';
 import { EffectsPanel } from './components/EffectsPanel';
 import { ResultDisplay } from './components/ResultDisplay';
-import { applyPhotoEffect, generateRandomEffects, generateMultiImageSuggestions } from './services/geminiService';
+import { IdentificationModal } from './components/IdentificationModal';
+import { applyPhotoEffect, generateRandomEffects, generateMultiImageSuggestions, identifyImageContent } from './services/geminiService';
 import type { Effect } from './types';
 
 function fileToBase64(file: File): Promise<string> {
@@ -40,6 +41,9 @@ const App: React.FC = () => {
   const [isGeneratingEffects, setIsGeneratingEffects] = useState(false);
   const [customPrompt, setCustomPrompt] = useState('');
   const [preCompositionState, setPreCompositionState] = useState<{ files: File[], images: string[] } | null>(null);
+  const [isIdentifying, setIsIdentifying] = useState(false);
+  const [identificationResult, setIdentificationResult] = useState<string | null>(null);
+  const [showIdentificationModal, setShowIdentificationModal] = useState(false);
 
 
   const currentImage = history[historyIndex] || null;
@@ -203,6 +207,35 @@ const App: React.FC = () => {
     handleSelectEffect(customEffect);
   }, [customPrompt, handleSelectEffect, isMultiImageMode]);
 
+  const handleIdentifyImage = useCallback(async () => {
+    if (!currentImage) {
+      setError("没有可供识别的图片。");
+      return;
+    }
+
+    setIsIdentifying(true);
+    setIdentificationResult(null);
+    setShowIdentificationModal(true);
+    setError(null);
+
+    try {
+      const mimeType = currentImage.match(/:(.*?);/)?.[1] || 'image/png';
+      const base64Data = currentImage.split(',')[1];
+      
+      const imageToIdentify = { data: base64Data, mimeType: mimeType };
+      
+      const result = await identifyImageContent(imageToIdentify);
+      setIdentificationResult(result);
+
+    } catch (err: any) {
+      console.error("Error identifying image:", err);
+      setError(err.message || "识别图片时发生未知错误。");
+      setShowIdentificationModal(false); 
+    } finally {
+      setIsIdentifying(false);
+    }
+  }, [currentImage]);
+
   const handleUndo = useCallback(() => {
     if (historyIndex > 0) {
       setHistoryIndex(historyIndex - 1);
@@ -235,7 +268,7 @@ const App: React.FC = () => {
             <EffectsPanel 
                 onSelectEffect={handleSelectEffect} 
                 selectedEffectId={selectedEffectId}
-                isLoading={isLoading}
+                isLoading={isLoading || isIdentifying}
                 isReady={sourceImages.length > 0}
                 hasMultipleImages={isMultiImageMode}
                 randomEffects={randomEffects}
@@ -260,6 +293,8 @@ const App: React.FC = () => {
               onRedo={handleRedo}
               canUndo={canUndo}
               canRedo={canRedo}
+              onIdentify={handleIdentifyImage}
+              isIdentifying={isIdentifying}
             />
           </div>
         </div>
@@ -267,6 +302,12 @@ const App: React.FC = () => {
       <footer className="text-center py-6 text-sm text-gray-500">
         <p>由 Gemini API 强力驱动</p>
       </footer>
+      <IdentificationModal 
+        isOpen={showIdentificationModal}
+        onClose={() => setShowIdentificationModal(false)}
+        result={identificationResult}
+        isLoading={isIdentifying}
+      />
     </div>
   );
 };

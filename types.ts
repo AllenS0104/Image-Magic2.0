@@ -5,3 +5,8 @@ export interface Effect {
   prompt: string;
   multiImage?: boolean;
 }
+
+export interface EffectCategory {
+  name: string;
+  effects: Effect[];
+}

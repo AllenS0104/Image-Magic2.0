@@ -11,6 +11,8 @@ interface ResultDisplayProps {
   onRedo: () => void;
   canUndo: boolean;
   canRedo: boolean;
+  onIdentify: () => void;
+  isIdentifying: boolean;
 }
 
 const UndoIcon = () => (
@@ -33,6 +35,15 @@ const InfoIcon = () => (
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
 );
+const IdentifyIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 10l.01.01" />
+    </svg>
+);
+const LoadingSpinnerMiniButton = () => (
+    <div className="w-5 h-5 border-2 border-dashed rounded-full animate-spin border-current"></div>
+);
+
 
 const LoadingState: React.FC = () => (
   <div className="flex flex-col items-center justify-center gap-4 text-center">
@@ -75,7 +86,7 @@ const MultiImagePlaceholder: React.FC = () => (
 );
 
 
-export const ResultDisplay: React.FC<ResultDisplayProps> = ({ originalImage, processedImage, isLoading, error, hasContent, hasMultipleImages, onUndo, onRedo, canUndo, canRedo }) => {
+export const ResultDisplay: React.FC<ResultDisplayProps> = ({ originalImage, processedImage, isLoading, error, hasContent, hasMultipleImages, onUndo, onRedo, canUndo, canRedo, onIdentify, isIdentifying }) => {
   const toolbarButtonClasses = "disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 px-4 py-2 bg-transparent text-white/90 font-semibold rounded-full hover:enabled:bg-white/10 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500";
   
   const displayImage = processedImage || originalImage;
@@ -119,14 +130,16 @@ export const ResultDisplay: React.FC<ResultDisplayProps> = ({ originalImage, pro
         
         {hasContent && !isLoading && !error && (
             <div className="flex items-center justify-center gap-2 mt-2 bg-gray-700/50 rounded-full p-1 shadow-lg border border-gray-700">
-                <button onClick={onUndo} disabled={!canUndo} className={toolbarButtonClasses} aria-label="Undo change"><UndoIcon /> <span className="hidden sm:inline">撤销</span></button>
-                <button onClick={onRedo} disabled={!canRedo} className={toolbarButtonClasses} aria-label="Redo change"><RedoIcon /> <span className="hidden sm:inline">重做</span></button>
-                <div className="relative group flex items-center cursor-pointer px-2">
-                    <InfoIcon />
-                    <div className="absolute bottom-full mb-2 w-max max-w-[250px] p-3 text-xs text-center text-white/90 bg-gray-700 rounded-lg shadow-xl opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 pointer-events-none origin-bottom z-20">
-                        您的编辑历史会被保存，可以随时撤销和重做。放心大胆地尝试各种效果吧！
-                    </div>
-                </div>
+                <button onClick={onUndo} disabled={!canUndo || isIdentifying} className={toolbarButtonClasses} aria-label="Undo change"><UndoIcon /> <span className="hidden sm:inline">撤销</span></button>
+                <button onClick={onRedo} disabled={!canRedo || isIdentifying} className={toolbarButtonClasses} aria-label="Redo change"><RedoIcon /> <span className="hidden sm:inline">重做</span></button>
+                
+                <div className="w-px h-6 bg-white/20 mx-1"></div>
+                
+                <button onClick={onIdentify} disabled={isLoading || isIdentifying || !displayImage} className={toolbarButtonClasses} aria-label="Identify content">
+                    {isIdentifying ? <LoadingSpinnerMiniButton /> : <IdentifyIcon />}
+                    <span className="hidden sm:inline">{isIdentifying ? '识别中...' : '智能识别'}</span>
+                </button>
+                
                 {processedImage && (
                     <>
                       <div className="w-px h-6 bg-white/20 mx-1"></div>
@@ -135,6 +148,12 @@ export const ResultDisplay: React.FC<ResultDisplayProps> = ({ originalImage, pro
                       </a>
                     </>
                 )}
+                 <div className="relative group flex items-center cursor-pointer px-2">
+                    <InfoIcon />
+                    <div className="absolute bottom-full mb-2 w-max max-w-[250px] p-3 text-xs text-center text-white/90 bg-gray-700 rounded-lg shadow-xl opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 pointer-events-none origin-bottom z-20">
+                        您的编辑历史会被保存，可以随时撤销和重做。放心大胆地尝试各种效果吧！
+                    </div>
+                </div>
           </div>
         )}
       </div>
