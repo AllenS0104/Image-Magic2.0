@@ -40,6 +40,7 @@ const App: React.FC = () => {
   const [multiImageSuggestions, setMultiImageSuggestions] = useState<Effect[]>([]);
   const [isGeneratingEffects, setIsGeneratingEffects] = useState(false);
   const [customPrompt, setCustomPrompt] = useState('');
+  const [adjustments, setAdjustments] = useState({ saturation: 0, contrast: 0, sharpness: 0 });
   const [preCompositionState, setPreCompositionState] = useState<{ files: File[], images: string[] } | null>(null);
   const [isIdentifying, setIsIdentifying] = useState(false);
   const [identificationResult, setIdentificationResult] = useState<string | null>(null);
@@ -57,6 +58,7 @@ const App: React.FC = () => {
     setRandomEffects([]);
     setMultiImageSuggestions([]);
     setCustomPrompt('');
+    setAdjustments({ saturation: 0, contrast: 0, sharpness: 0 });
     setSelectedEffectId(null);
     setError(null);
     setPreCompositionState(null);
@@ -111,10 +113,10 @@ const App: React.FC = () => {
       }
   }, [sourceFiles, sourceImages, resetAllState]);
 
-  const handleSelectEffect = useCallback(async (effect: Effect) => {
+  const handleSelectEffect = useCallback(async (effect: Effect): Promise<boolean> => {
     if (!currentImage && !isMultiImageMode) {
       setError("请先上传一张图片。");
-      return;
+      return false;
     }
 
     setIsLoading(true);
@@ -148,12 +150,14 @@ const App: React.FC = () => {
           newHistory.push(newImage);
           setHistory(newHistory); setHistoryIndex(newHistory.length - 1);
         }
+        return true;
       } else {
         throw new Error("AI模型未能返回图片。");
       }
     } catch (err: any) {
       console.error("Error applying effect:", err);
       setError(err.message || "处理图片时发生未知错误。");
+      return false;
     } finally {
       setIsLoading(false);
     }
@@ -206,6 +210,47 @@ const App: React.FC = () => {
     };
     handleSelectEffect(customEffect);
   }, [customPrompt, handleSelectEffect, isMultiImageMode]);
+
+  const mapValueToDescription = (value: number, type: 'saturation' | 'contrast' | 'sharpness') => {
+    if (value === 0) return null;
+    const direction = value > 0 ? 'increase' : 'decrease';
+    const absValue = Math.abs(value);
+    let magnitude = '';
+    if (absValue > 80) magnitude = 'drastically';
+    else if (absValue > 50) magnitude = 'significantly';
+    else if (absValue > 20) magnitude = 'moderately';
+    else magnitude = 'slightly';
+    return `* ${type.charAt(0).toUpperCase() + type.slice(1)}: ${magnitude} ${direction} (value: ${value} on a -100 to 100 scale).`;
+  };
+
+  const handleApplyManualAdjustments = useCallback(async () => {
+      const { saturation, contrast, sharpness } = adjustments;
+      const adjustmentDescriptions = [
+          mapValueToDescription(saturation, 'saturation'),
+          mapValueToDescription(contrast, 'contrast'),
+          mapValueToDescription(sharpness, 'sharpness')
+      ].filter(Boolean);
+
+      if (adjustmentDescriptions.length === 0) {
+          setError("请至少调整一个滑块。");
+          return;
+      }
+      
+      const prompt = `Apply ONLY the following precise adjustments to the photograph, relative to its current state. Do not apply any other stylistic changes or filters. The final image must remain photorealistic.\n${adjustmentDescriptions.join('\n')}`;
+
+      const manualEffect: Effect = {
+          id: 'manual-' + Date.now(),
+          name: '手动微调',
+          description: '饱和度/对比度/锐度',
+          prompt: prompt,
+          multiImage: isMultiImageMode,
+      };
+
+      const success = await handleSelectEffect(manualEffect);
+      if (success) {
+        setAdjustments({ saturation: 0, contrast: 0, sharpness: 0 });
+      }
+  }, [adjustments, handleSelectEffect, isMultiImageMode]);
 
   const handleIdentifyImage = useCallback(async () => {
     if (!currentImage) {
@@ -279,6 +324,10 @@ const App: React.FC = () => {
                 customPrompt={customPrompt}
                 setCustomPrompt={setCustomPrompt}
                 onApplyCustomPrompt={handleApplyCustomPrompt}
+                adjustments={adjustments}
+                onAdjustmentChange={setAdjustments}
+                onApplyManualAdjustments={handleApplyManualAdjustments}
+                onResetAdjustments={() => setAdjustments({ saturation: 0, contrast: 0, sharpness: 0 })}
             />
           </div>
           <div className="lg:col-span-9">

@@ -16,6 +16,10 @@ interface EffectsPanelProps {
   customPrompt: string;
   setCustomPrompt: (prompt: string) => void;
   onApplyCustomPrompt: () => void;
+  adjustments: { saturation: number; contrast: number; sharpness: number; };
+  onAdjustmentChange: (adjustments: { saturation: number; contrast: number; sharpness: number; }) => void;
+  onApplyManualAdjustments: () => void;
+  onResetAdjustments: () => void;
 }
 
 const SparkleIcon = () => (
@@ -26,6 +30,31 @@ const SparkleIcon = () => (
 
 const LoadingSpinnerMini = () => (
     <div className="w-5 h-5 border-2 border-dashed rounded-full animate-spin border-white mr-2"></div>
+);
+
+const AdjustmentSlider: React.FC<{
+  id: 'saturation' | 'contrast' | 'sharpness';
+  label: string;
+  value: number;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  disabled: boolean;
+}> = ({ id, label, value, onChange, disabled }) => (
+    <div className="flex flex-col gap-1">
+        <div className="flex justify-between text-sm">
+            <label htmlFor={id} className="text-white/80">{label}</label>
+            <span className={`font-mono text-white/90 transition-colors ${value !== 0 ? 'text-blue-400' : ''}`}>{value > 0 ? `+${value}`: value}</span>
+        </div>
+        <input
+            id={id}
+            type="range"
+            min="-100"
+            max="100"
+            value={value}
+            onChange={onChange}
+            disabled={disabled}
+            className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer range-thumb disabled:cursor-not-allowed"
+        />
+    </div>
 );
 
 
@@ -42,7 +71,11 @@ export const EffectsPanel: React.FC<EffectsPanelProps> = ({
     isGeneratingEffects,
     customPrompt,
     setCustomPrompt,
-    onApplyCustomPrompt
+    onApplyCustomPrompt,
+    adjustments,
+    onAdjustmentChange,
+    onApplyManualAdjustments,
+    onResetAdjustments
 }) => {
   
   let categoriesToShow: EffectCategory[] = [];
@@ -61,6 +94,8 @@ export const EffectsPanel: React.FC<EffectsPanelProps> = ({
   }
   
   const isPanelDisabled = !isReady || isLoading || isGeneratingEffects;
+  const areAdjustmentsMade = adjustments.saturation !== 0 || adjustments.contrast !== 0 || adjustments.sharpness !== 0;
+
 
   const handleAIGenerateClick = () => {
     if (hasMultipleImages) {
@@ -69,6 +104,14 @@ export const EffectsPanel: React.FC<EffectsPanelProps> = ({
         onGenerateRandomEffects();
     }
   }
+
+  const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    onAdjustmentChange({
+        ...adjustments,
+        [id]: Number(value),
+    });
+  };
 
   return (
     <div className="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700 flex flex-col gap-4">
@@ -106,6 +149,34 @@ export const EffectsPanel: React.FC<EffectsPanelProps> = ({
             </div>
           </div>
         ))}
+      </div>
+      
+      <div className="border-t border-gray-700 my-2"></div>
+
+      <div className={`transition-opacity duration-300 ${hasMultipleImages ? 'opacity-50 cursor-not-allowed' : ''}`}>
+        <h3 className="text-lg font-semibold text-white/80 mb-3">手动微调</h3>
+        <div className="flex flex-col gap-4">
+            <AdjustmentSlider id="saturation" label="饱和度" value={adjustments.saturation} onChange={handleSliderChange} disabled={isPanelDisabled || hasMultipleImages} />
+            <AdjustmentSlider id="contrast" label="对比度" value={adjustments.contrast} onChange={handleSliderChange} disabled={isPanelDisabled || hasMultipleImages} />
+            <AdjustmentSlider id="sharpness" label="锐度" value={adjustments.sharpness} onChange={handleSliderChange} disabled={isPanelDisabled || hasMultipleImages} />
+            
+            <div className="grid grid-cols-2 gap-3 mt-2">
+                <button
+                    onClick={onResetAdjustments}
+                    disabled={isPanelDisabled || hasMultipleImages || !areAdjustmentsMade}
+                    className="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md transition-colors duration-300 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-gray-400 disabled:bg-gray-600/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    重置
+                </button>
+                <button
+                    onClick={onApplyManualAdjustments}
+                    disabled={isPanelDisabled || hasMultipleImages || !areAdjustmentsMade}
+                    className="px-4 py-2 bg-green-600 text-white font-semibold rounded-lg shadow-md transition-colors duration-300 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-green-500 disabled:bg-green-600/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    应用调整
+                </button>
+            </div>
+        </div>
       </div>
       
       <div className="border-t border-gray-700 my-2"></div>

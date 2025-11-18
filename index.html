@@ -17,6 +17,35 @@
   }
 }
 </script>
+<style>
+.range-thumb::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #3b82f6; /* blue-500 */
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid #1f2937; /* gray-800 */
+  margin-top: -8px; /* Center thumb */
+}
+.range-thumb::-moz-range-thumb {
+  width: 14px; /* adjusted for border */
+  height: 14px; /* adjusted for border */
+  background: #3b82f6;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid #1f2937;
+}
+input[type=range]:disabled::-webkit-slider-thumb {
+    background-color: #4b5563; /* gray-600 */
+    cursor: not-allowed;
+}
+input[type=range]:disabled::-moz-range-thumb {
+    background-color: #4b5563;
+    cursor: not-allowed;
+}
+</style>
 </head>
   <body class="bg-gray-900 text-white/90">
     <div id="root"></div>

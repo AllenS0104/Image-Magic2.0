@@ -99,6 +99,18 @@ export const SINGLE_IMAGE_EFFECT_CATEGORIES: EffectCategory[] = [
         prompt: 'Convert this photo into a detailed pencil sketch. It should look hand-drawn, with clear outlines, shading, and cross-hatching for texture.',
       },
       {
+        id: 'oil-painting',
+        name: '油画',
+        description: '厚重的笔触与质感',
+        prompt: 'Transform this photo into a realistic oil painting. Emphasize visible, textured brushstrokes and a rich, vibrant color palette. The final image should have the tangible feel of a classic canvas painting, with depth and a sense of impasto.',
+      },
+      {
+        id: 'ink-wash',
+        name: '水墨画',
+        description: '东方的写意神韵',
+        prompt: 'Transform this photo into a traditional Chinese ink wash painting (Shui-mo hua). Use only black ink in various tones (from deep black to light gray washes) on a textured rice paper background. The style should be minimalist and expressive, emphasizing flowing brushwork and the spirit (qi) of the subject rather than photorealistic detail. Capture the essence with elegant, simple strokes.',
+      },
+      {
         id: 'manga',
         name: '漫画风格',
         description: '日式黑白漫画感',
@@ -122,6 +134,64 @@ export const SINGLE_IMAGE_EFFECT_CATEGORIES: EffectCategory[] = [
         description: '现代感十足的设计风格',
         prompt: "Convert this photo into a striking duotone image. Remap the darkest tones of the image to a deep navy blue (#000080) and the brightest tones to a vibrant electric lime green (#32CD32). The transition between the two colors should be smooth, creating a bold, modern, graphic design look suitable for a poster or album cover.",
       },
+    ]
+  },
+  {
+    name: '国风二次元',
+    effects: [
+      {
+        id: 'xianxia-fantasy',
+        name: '仙侠幻境',
+        description: '飘逸的水墨笔触与空灵感',
+        prompt: 'Transform this photo into a breathtaking "Xianxia" (Immortal Heroes) fantasy art piece. The style should blend traditional Chinese ink wash painting (Shui-mo hua) with modern anime aesthetics. Key elements to include are: flowing, ethereal lines for clothing and hair; a soft, dreamlike color palette with muted tones and occasional bursts of vibrant color for magical effects; and elements of mystical nature, like swirling clouds, ancient mountains, or glowing flora. The overall mood should be elegant, epic, and otherworldly.',
+      },
+      {
+        id: 'cyberpunk-ancient-city',
+        name: '赛博古城',
+        description: '传统建筑与未来霓虹的碰撞',
+        prompt: 'Reimagine this photo in a "Guochao Cyberpunk" style. Fuse traditional Chinese architectural elements (like pagoda roofs, intricate wooden lattices, and guardian lions) with futuristic, high-tech cyberpunk aesthetics. The scene should be drenched in a neon glow, with a color palette dominated by electric blues, vibrant magentas, and golden yellows, contrasted against deep, rainy-night shadows. Add holographic signs featuring Chinese characters, futuristic vehicles, and characters in tech-infused traditional attire. The final image should be a stunning, high-contrast fusion of ancient tradition and a neon-soaked future.',
+      },
+      {
+        id: 'ink-wash-scroll',
+        name: '丹青画卷',
+        description: '游戏CG般的国风立绘',
+        prompt: 'Convert this photo into a stunning "Guofeng" (Chinese Style) character portrait, reminiscent of high-quality video game concept art. The character should have delicate, anime-style facial features but be rendered with the rich textures and brushwork of traditional Chinese painting. Use a sophisticated color palette inspired by mineral pigments like vermilion, malachite green, and azurite blue. The background should be simple and elegant, perhaps a textured scroll or a hint of a classic landscape, to keep the focus on the character. The overall feel should be heroic, refined, and artistically detailed.',
+      },
+      {
+        id: 'cute-mythical-beast',
+        name: '萌系神兽',
+        description: '将主体变为Q版神兽',
+        prompt: 'If the image contains a person or an animal, transform the main subject into an adorable "Q-version" (chibi) Chinese mythical beast. For example, a person could become a cute dragon, a cat could become a mini white tiger, or a dog could become a playful "qilin". The creature should have large, expressive anime eyes, a rounded, simplified body, and incorporate iconic design elements of its mythical counterpart. The style should be cute, vibrant, and playful, suitable for a sticker or a character design. If there is no clear subject, gracefully decline the transformation.',
+      }
+    ]
+  },
+  {
+    name: '日式二次元',
+    effects: [
+      {
+        id: 'shinkai-style',
+        name: '新海诚风滤镜',
+        description: '捕捉光影的每一个瞬间',
+        prompt: 'Transform this photo into the iconic style of a Makoto Shinkai film. The key is to create a hyper-realistic yet dreamlike atmosphere. Emphasize dramatic lighting with brilliant, detailed clouds, stunning sunsets/sunrises, and prominent light rays (crepuscular rays). Add subtle lens flares. The color palette should be incredibly vibrant and emotional, with deep blues in the shadows and glowing, warm highlights. Make every detail, from cityscapes to nature, look breathtakingly beautiful and full of nostalgic emotion.',
+      },
+      {
+        id: 'jrpg-fantasy',
+        name: 'JRPG幻想风',
+        description: '最终幻想般的华丽与史诗感',
+        prompt: 'Reimagine this photo as a piece of high-quality concept art for a Japanese Role-Playing Game (JRPG) like Final Fantasy. The style should be elegant, detailed, and epic. If there are characters, render them with intricate, fantasy-inspired attire and dynamic poses. Incorporate glowing magical elements, ornate patterns, and a sense of grandeur. The lighting should be dramatic and the colors rich and fantastical. The final image should feel like a key visual from an epic adventure story.',
+      },
+      {
+        id: '90s-cel-anime',
+        name: '90年代赛璐璐',
+        description: '复古手绘动画的质感',
+        prompt: 'Convert this photo to look like a frame from a 1990s cel-animated anime film or OVA. The image should have a distinct retro aesthetic. Use slightly softer, less defined lines compared to modern digital anime. Apply a subtle film grain over the entire image. The color palette should be characteristic of the 90s, often with less saturation and a unique color balance. Highlights should be simple and cell-shaded. The overall effect should evoke a sense of nostalgia for classic hand-drawn animation.',
+      },
+      {
+        id: 'light-novel-cover',
+        name: '轻小说封面',
+        description: '高饱和度的精美插画',
+        prompt: 'Transform this photo into a vibrant, eye-catching illustration suitable for a Japanese light novel cover. The style should be polished and modern. Use bright, highly saturated colors and clean, sharp line art. If there is a character, render them with large, expressive anime eyes and stylish hair. The composition should be dynamic, often with a clear focal point on the character against a detailed or stylized background. Add a professional, high-energy gloss to the entire image.',
+      }
     ]
   },
   {
@@ -166,7 +236,13 @@ export const SINGLE_IMAGE_EFFECT_CATEGORIES: EffectCategory[] = [
         id: 'eye-of-cosmos',
         name: '星辰之眼',
         description: '史诗级星空增强',
-        prompt: "Transform the sky in this photo into an epic and crystal-clear celestial masterpiece. Your primary goal is absolute sharpness and clarity. 1. **Stars**: Render all stars as tack-sharp, brilliantly clear points of light. There should be zero blur or smudging. The sky should be filled with a mix of fine, distant stars and a few brighter, more prominent ones that have a subtle, crisp glow. 2. **Milky Way**: The centerpiece should be a stunningly detailed Milky Way galaxy. Be creative with its composition: it could be a majestic vertical pillar of light, a grand horizontal arc stretching across the horizon, or a dynamic diagonal slash. The Milky Way must show intricate detail, with dark dust lanes contrasting against glowing nebulae and dense star fields. 3. **Details**: To enhance the realism and sense of wonder, you may subtly add a small, distant star cluster if it complements the scene. 4. **Overall Mood**: The final image should be awe-inspiring, with a deep, dark sky that makes the celestial objects pop with incredible vibrancy and clarity. It should look like a professional astrophotograph taken under perfect conditions.",
+        prompt: "Transform the sky in this photo into an epic and crystal-clear celestial masterpiece. Your primary goal is absolute sharpness and clarity. 1. **Stars**: Render all stars as tack-sharp, brilliantly clear points of light. There should be zero blur or smudging. The sky should be filled with a mix of fine, distant stars and a few brighter, more prominent ones that have a subtle, crisp glow. 2. **Milky Way**: The centerpiece should be a stunningly detailed Milky Way galaxy. Be creative with its composition: it could be a majestic vertical pillar of light, a grand horizontal arc stretching across the horizon, or a dynamic diagonal slash. The Milky Way must show intricate detail, with dark dust lanes contrasting against glowing nebulae and dense star fields. 3. **Details**: To enhance the realism and a sense of wonder, you may subtly add a small, distant star cluster if it complements the scene. 4. **Overall Mood**: The final image should be awe-inspiring, with a deep, dark sky that makes the celestial objects pop with incredible vibrancy and clarity. It should look like a professional astrophotograph taken under perfect conditions.",
+      },
+      {
+        id: 'shooting-star',
+        name: '流星划过',
+        description: '为夜空增添一颗璀璨的流星',
+        prompt: "First, transform the entire scene into a beautiful, clear night setting, ensuring the main subject is preserved and realistically lit for nighttime. Then, add a single, highly realistic and subtle shooting star (meteor) to the new night sky. KEY REQUIREMENTS FOR THE METEOR: It must be very small and faint, appearing as a delicate, thin streak of light. The head of the meteor should be just a tiny, sharp point of light, and its tail should be very short, thin, and quickly fading. CRITICAL: Avoid any exaggeration. Do not create a large, overly bright, or dramatic fireball or comet. The effect should be that of a common, faint meteor that one might realistically see and capture with a camera on a dark night. The final photograph must be believable and of high quality.",
       },
       {
         id: 'star-trails',
@@ -183,6 +259,35 @@ export const SINGLE_IMAGE_EFFECT_CATEGORIES: EffectCategory[] = [
     ]
   },
   {
+    name: '深空幻想',
+    effects: [
+      {
+        id: 'nebula-embrace',
+        name: '星云之拥',
+        description: '化身为创生之柱',
+        prompt: "Transform the image into a breathtaking deep space nebula, reminiscent of the Pillars of Creation. Use the image's existing shapes and colors as a base to generate towering columns of interstellar gas and dust. The nebula should be illuminated from within by newborn stars, creating a vibrant, multi-hued glow with deep shadows that give it a three-dimensional structure. The final image should be awe-inspiring and cosmic.",
+      },
+      {
+        id: 'galaxy-vortex',
+        name: '旋涡星系',
+        description: '融入宏伟的星系旋臂',
+        prompt: "Superimpose or transform the scene into a majestic spiral galaxy. The main subject should be artistically integrated into the galactic core or a prominent spiral arm. The galaxy should feature a bright, dense core, well-defined spiral arms filled with young, blue stars, and dark dust lanes. The surrounding space should be filled with distant stars and smaller galaxies to create a sense of immense scale.",
+      },
+      {
+        id: 'gravitational-singularity',
+        name: '引力奇点',
+        description: '凝视黑洞的深渊',
+        prompt: "Introduce a photorealistic black hole into the image, creating a powerful and dramatic focal point. The black hole should be a perfect sphere of pure blackness, surrounded by a brightly glowing accretion disk of superheated gas. Crucially, implement a convincing gravitational lensing effect, where the background stars and light behind the black hole are warped and distorted around its edge. The scene should feel both terrifying and beautiful.",
+      },
+      {
+        id: 'cosmic-rift',
+        name: '宇宙裂隙',
+        description: '撕开现实，窥视彼界',
+        prompt: "Create a 'cosmic rift' or a tear in the fabric of spacetime within the image. This rift should appear as a jagged, glowing crack in the sky or scene. Through the crack, viewers should get a glimpse of a different, alien cosmos—perhaps with different colored stars, strange nebulae, or otherworldly galaxies. The edges of the rift should glow with intense energy, casting an ethereal light onto the rest of the scene.",
+      }
+    ]
+  },
+  {
     name: '专业模式',
     effects: [
       {
@@ -190,6 +295,12 @@ export const SINGLE_IMAGE_EFFECT_CATEGORIES: EffectCategory[] = [
         name: '人像模式',
         description: '主体锐化，背景虚化',
         prompt: 'Apply a portrait mode effect. Sharpen the main subject and apply a subtle, natural-looking blur to the background to create depth of field.'
+      },
+      {
+        id: 'de-shake',
+        name: '智能去抖',
+        description: '拯救手抖照片',
+        prompt: "Analyze this photograph for motion blur and camera shake. Apply a powerful de-shaking and sharpening effect to restore maximum clarity and detail. The goal is to make the image look as if it were taken with a steady hand or a tripod, correcting the blur while maintaining a natural, photorealistic appearance. Do not introduce artificial textures or over-sharpening artifacts.",
       },
       {
         id: 'gourmet',
@@ -202,6 +313,12 @@ export const SINGLE_IMAGE_EFFECT_CATEGORIES: EffectCategory[] = [
         name: 'HDR 增强',
         description: '提升细节与动态范围',
         prompt: 'Apply a High Dynamic Range (HDR) effect to this image. Dramatically increase the detail in both the darkest shadows and brightest highlights. The image should look incredibly sharp, vibrant, and clear, with a wider range of tones than a standard photograph, but still look natural and not overly processed.',
+      },
+      {
+        id: 'saturation-master',
+        name: '饱和度大神',
+        description: '鲜艳生动的色彩',
+        prompt: "Apply a master-level saturation boost to this photograph. Your goal is to make all colors incredibly vibrant, rich, and full of life, without making them look unnatural or oversaturated. Intelligently enhance the saturation across the entire tonal range, making colors pop while carefully preserving natural skin tones and preventing color clipping in highly saturated areas. The final image should have a clean, punchy, and professional look with vivid colors that draw the viewer in.",
       },
       {
         id: 'minimalist',
